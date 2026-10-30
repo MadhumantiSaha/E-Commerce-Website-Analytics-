@@ -1,0 +1,48 @@
+New Customers = 
+CALCULATE(
+    DISTINCTCOUNT(Fact_EcomOrdersTable[Customer_ID]),
+    FILTER(
+        VALUES(Fact_EcomOrdersTable[Customer_ID]),
+        CALCULATE(DISTINCTCOUNT(Fact_EcomOrdersTable[Order_ID])) = 1
+    )
+)
+
+Repeat Customers = 
+CALCULATE(
+    DISTINCTCOUNT(Fact_EcomOrdersTable[Customer_ID]),
+    FILTER(
+        VALUES(Fact_EcomOrdersTable[Customer_ID]),
+        CALCULATE(DISTINCTCOUNT(Fact_EcomOrdersTable[Order_ID])) >= 2
+    )
+)
+
+Repeat Customer Rate % = 
+VAR CustomerOrderTable =
+    ADDCOLUMNS(
+        VALUES(Fact_EcomOrdersTable[Customer_ID]),
+        "@OrderCount",
+            CALCULATE([Valid Orders])
+    )
+
+    VAR TotalCustomers =
+        COUNTROWS(
+            FILTER(
+                CustomerOrderTable,
+                [@OrderCount] >= 1
+            )
+        )
+
+    VAR RepeatCustomers =
+        COUNTROWS(
+            FILTER(
+                CustomerOrderTable,
+                [@OrderCount] >= 2
+            )
+        )
+
+    RETURN
+        DIVIDE(
+            RepeatCustomers,
+            TotalCustomers,
+            0
+        )

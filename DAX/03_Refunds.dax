@@ -1,0 +1,22 @@
+Refund Value = 
+SUMX(
+    FILTER(
+        EcomRefundsTable,
+        EcomRefundsTable[Refund_Status] IN {
+            "Refunded",
+            "Approved"
+        }
+    ),
+    EcomRefundsTable[Refund_Qty]
+        * RELATED(Fact_EcomOrdersTable[Net Unit Price])
+)
+
+Refund Rate % = 
+DIVIDE(
+    [Refunded Orders],
+    [Valid Orders],
+    0
+)
+
+Adjusted Revenue = 
+[Net Revenue] - [Refund Value]

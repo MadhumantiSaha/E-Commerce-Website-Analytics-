@@ -1,0 +1,16 @@
+Marketing Spend = 
+SUM(CampaignPerformanceTable[Marketing_Spend])
+
+Gross Margin % = 
+DIVIDE(
+    [Gross Profit],
+    [Net Revenue],
+    0
+)
+
+Order Conversion Rate % = 
+DIVIDE(
+    [Valid Orders],
+    SUM(WebTrafficTable[Sessions]),
+    0
+)

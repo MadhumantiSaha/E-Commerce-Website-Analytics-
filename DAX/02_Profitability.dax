@@ -1,0 +1,27 @@
+COGS = 
+SUMX(
+    FILTER(
+        Fact_EcomOrdersTable,
+        Fact_EcomOrdersTable[Order_Status] <> "Cancelled"
+            && Fact_EcomOrdersTable[Quantity] > 0
+    ),
+    Fact_EcomOrdersTable[Quantity]
+        * RELATED(EcomProductTable[Unit_Cost])
+)
+
+Gross Profit = 
+[Net Revenue] - [COGS]
+
+Gross Margin % = 
+DIVIDE(
+    [Gross Profit],
+    [Net Revenue],
+    0
+)
+
+Average Order Value = 
+DIVIDE(
+    [Net Revenue],
+    [Valid Orders],
+    0
+)

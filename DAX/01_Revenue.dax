@@ -1,0 +1,28 @@
+Valid Orders = 
+CALCULATE(
+    DISTINCTCOUNT(Fact_EcomOrdersTable[Order_ID]),
+    Fact_EcomOrdersTable[Order_Status] <> "Cancelled",
+    Fact_EcomOrdersTable[Quantity] > 0
+)
+
+Product Revenue = 
+SUMX(
+    FILTER(
+        Fact_EcomOrdersTable,
+        Fact_EcomOrdersTable[Order_Status] <> "Cancelled"
+            && Fact_EcomOrdersTable[Quantity] > 0
+    ),
+    Fact_EcomOrdersTable[Quantity]
+        * RELATED(EcomProductTable[List_Price])
+        * (1 - Fact_EcomOrdersTable[Coupon_Discount_Pct])
+)
+
+Shipping Revenue = 
+CALCULATE(
+    SUM(Fact_EcomOrdersTable[Shipping_Fee]),
+    Fact_EcomOrdersTable[Order_Status] <> "Cancelled",
+    Fact_EcomOrdersTable[Quantity] > 0
+)
+
+Net Revenue = 
+[Product Revenue] + [Shipping Revenue]

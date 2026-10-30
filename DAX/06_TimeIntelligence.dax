@@ -1,0 +1,18 @@
+Revenue YTD = 
+TOTALYTD(
+    [Net Revenue],
+    Dim_Date[Date]
+)
+
+Revenue LY = 
+CALCULATE(
+    [Net Revenue],
+    SAMEPERIODLASTYEAR(Dim_Date[Date])
+)
+
+Revenue YoY % = 
+DIVIDE(
+    [Net Revenue] - [Revenue LY],
+    [Revenue LY],
+    0
+)
